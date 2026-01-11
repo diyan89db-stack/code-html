@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bagas Jago Ngoding</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 flex justify-center items-center h-screen overflow-hidden">
+
+  <div class="bg-white p-4 rounded-md shadow-xl flex flex-col items-center">
+    <img
+      id="gambar"
+      src="https://media.tenor.com/GfSX-u7VGM4AAAAM/coding.gif"
+      width="280"
+      class="rounded mb-3"
+    />
+
+    <h1 id="kalimat" class="text-xl font-bold text-center mb-4">
+      Bagas jago ngoding gak? 😎💻
+    </h1>
+
+    <div class="flex gap-4">
+      <button
+        id="tombolYa"
+        onclick="yaDitekan()"
+        class="bg-green-700 text-white px-4 py-1 rounded w-32"
+      >
+        YA
+      </button>
+
+      <button
+        id="tombolTidak"
+        class="bg-red-700 text-white px-4 py-1 rounded w-32"
+      >
+        TIDAK
+      </button>
+    </div>
+  </div>
+
+  <!-- CONFETTI -->
+  <canvas id="confetti" class="fixed top-0 left-0 pointer-events-none"></canvas>
+
+  <!-- AUDIO -->
+  <audio id="ketawa">
+    <source src="https://www.myinstants.com/media/sounds/vine-boom.mp3">
+  </audio>
+
+  <script>
+    const tombolTidak = document.getElementById("tombolTidak");
+    const tombolYa = document.getElementById("tombolYa");
+    const kalimat = document.getElementById("kalimat");
+    const gambar = document.getElementById("gambar");
+    const suara = document.getElementById("ketawa");
+
+    const kataRandom = [
+      "Eits 😏",
+      "Yakin?",
+      "Gak bakal kena",
+      "Klik YA aja",
+      "Auto kalah 🤣"
+    ];
+
+    let kecepatan = 120;
+
+    function kabur() {
+      suara.currentTime = 0;
+      suara.play();
+
+      tombolTidak.style.position = "absolute";
+      tombolTidak.style.transition = "0.05s";
+      tombolTidak.style.left =
+        Math.random() * (window.innerWidth - kecepatan) + "px";
+      tombolTidak.style.top =
+        Math.random() * (window.innerHeight - 60) + "px";
+
+      kecepatan += 10;
+    }
+
+    tombolTidak.addEventListener("mouseenter", kabur);
+    tombolTidak.addEventListener("touchstart", kabur);
+
+    tombolTidak.addEventListener("click", () => {
+      kalimat.innerHTML =
+        kataRandom[Math.floor(Math.random() * kataRandom.length)];
+      kabur();
+    });
+
+    function yaDitekan() {
+      kalimat.innerHTML = "UDAH JELAS 😎🔥 BAGAS JAGO NGODING!";
+      gambar.src =
+        "https://media.tenor.com/2roX3uxz_68AAAAC/coding.gif";
+
+      tombolYa.style.display = "none";
+      tombolTidak.style.display = "none";
+
+      mulaiConfetti();
+    }
+
+    // CONFETTI
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+
+    function mulaiConfetti() {
+      for (let i = 0; i < 200; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 6 + 2,
+          d: Math.random() * 5 + 2,
+        });
+      }
+      requestAnimationFrame(renderConfetti);
+    }
+
+    function renderConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "gold";
+
+      confetti.forEach((c) => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+        c.y += c.d;
+      });
+
+      requestAnimationFrame(renderConfetti);
+    }
+  </script>
+
+</body>
+</html>

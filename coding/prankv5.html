@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Hacker Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body { background:black; }
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+.emoji {
+  position: fixed;
+  font-size: 26px;
+  pointer-events: none;
+  animation: fade 0.8s forwards;
+}
+@keyframes fade {
+  to { opacity:0; transform:translateY(-20px); }
+}
+.tidak-chaos {
+  position: fixed;
+  width: 120px;
+  height: 36px;
+  background: #b91c1c;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body class="flex items-center justify-center h-screen text-green-400 overflow-hidden">
+
+<canvas id="matrix"></canvas>
+
+<div id="box" class="bg-black bg-opacity-70 p-6 rounded border border-green-500 text-center z-10">
+  <img id="gambar"
+    src="https://media.tenor.com/GfSX-u7VGM4AAAAM/coding.gif"
+    width="200" class="mx-auto mb-4 rounded">
+
+  <h1 id="teks" class="text-xl font-bold mb-4">
+    Bagas jago ngoding gak?
+  </h1>
+
+  <div class="flex gap-4 justify-center relative">
+    <button id="ya"
+      class="bg-green-600 text-black px-4 py-1 rounded w-32">
+      YA
+    </button>
+
+    <button id="tidak"
+      class="bg-red-700 text-white px-4 py-1 rounded w-32">
+      TIDAK
+    </button>
+  </div>
+</div>
+
+<script>
+/* ===== SETTING (UBAH DI SINI) ===== */
+const TELEPORT_COOLDOWN = 1; // ms
+const TELEPORT_DISTANCE = 1000; // px
+
+/* ===== MATRIX ===== */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+const chars = "01HACKERBAGAS";
+const size = 16;
+const drops = Array(Math.floor(canvas.width/size)).fill(1);
+
+setInterval(()=>{
+  ctx.fillStyle="rgba(0,0,0,0.08)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#00ff00";
+  ctx.font=size+"px monospace";
+  drops.forEach((y,i)=>{
+    ctx.fillText(chars[Math.random()*chars.length|0], i*size, y*size);
+    drops[i]=y*size>canvas.height&&Math.random()>0.98?0:y+1;
+  });
+},35);
+
+/* ===== TIDAK TELEPORT (MUDAH) ===== */
+const tidak = document.getElementById("tidak");
+const emojis = ["😜","😂","🤡","🙃","😝"];
+let sudahKlik=false;
+let cooldown=false;
+
+tidak.addEventListener("mouseenter",(e)=>{
+  if(sudahKlik || cooldown) return;
+  cooldown=true;
+  setTimeout(()=>cooldown=false, TELEPORT_COOLDOWN);
+
+  const rect = tidak.getBoundingClientRect();
+  const angle = Math.random() * Math.PI * 2;
+
+  let newX = rect.left + Math.cos(angle) * TELEPORT_DISTANCE;
+  let newY = rect.top + Math.sin(angle) * TELEPORT_DISTANCE;
+
+  newX = Math.max(0, Math.min(innerWidth-120, newX));
+  newY = Math.max(0, Math.min(innerHeight-50, newY));
+
+  tidak.style.position="fixed";
+  tidak.style.left=newX+"px";
+  tidak.style.top=newY+"px";
+
+  const em=document.createElement("div");
+  em.className="emoji";
+  em.innerText=emojis[Math.random()*emojis.length|0];
+  em.style.left=e.clientX+"px";
+  em.style.top=e.clientY+"px";
+  document.body.appendChild(em);
+  setTimeout(()=>em.remove(),800);
+});
+
+/* ===== KLIK TIDAK ===== */
+tidak.onclick=()=>{
+  if(sudahKlik) return;
+  sudahKlik=true;
+  document.getElementById("box").remove();
+  mulaiChaos();
+};
+
+/* ===== CHAOS MODE ===== */
+let chaos=[];
+function mulaiChaos(){
+  setInterval(()=>{
+    for(let i=0;i<10;i++) spawn();
+  },1000);
+  requestAnimationFrame(update);
+}
+function spawn(){
+  const b=document.createElement("button");
+  b.className="tidak-chaos";
+  b.innerText="TIDAK";
+  b.x=Math.random()*(innerWidth-120);
+  b.y=Math.random()*(innerHeight-36);
+  b.vx=(Math.random()*12+8)*(Math.random()<.5?-1:1);
+  b.vy=(Math.random()*12+8)*(Math.random()<.5?-1:1);
+  document.body.appendChild(b);
+  chaos.push(b);
+}
+function update(){
+  chaos.forEach(b=>{
+    b.x+=b.vx;
+    b.y+=b.vy;
+    if(b.x<=0||b.x>=innerWidth-120) b.vx*=-1;
+    if(b.y<=0||b.y>=innerHeight-36) b.vy*=-1;
+    b.style.left=b.x+"px";
+    b.style.top=b.y+"px";
+  });
+  requestAnimationFrame(update);
+}
+
+/* ===== YA ===== */
+document.getElementById("ya").onclick=()=>{
+  document.getElementById("teks").innerHTML=
+    "✔ ACCESS GRANTED<br>🔥 YOU REAL PROGAMER 🔥<br>thanks,";
+  tidak.remove();
+};
+</script>
+
+</body>
+</html>
+
+
+

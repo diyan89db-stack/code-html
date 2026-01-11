@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YA / TIDAK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-800 flex justify-center items-center h-screen">
+    <div
+      class="border-2 border-gray-600 bg-white p-4 rounded-md shadow-lg shadow-slate-700 flex flex-col items-center"
+    >
+      <img
+        id="gambar"
+        class="rounded-md mb-3"
+        src="https://media.tenor.com/GfSX-u7VGM4AAAAM/coding.gif"
+        width="280"
+        alt="gif"
+      />
+
+      <h1
+        class="font-bold text-slate-800 text-xl text-center"
+        id="kalimat"
+      >
+        bagas jago ngoding gak ?
+      </h1>
+
+      <div class="mt-4 flex gap-4">
+        <button
+          id="tombolYa"
+          onclick="yaDitekan()"
+          class="bg-green-700 text-white px-4 py-1 rounded w-32"
+        >
+          YA
+        </button>
+
+        <button
+          id="tombolTidak"
+          onclick="tidakDitekan()"
+          class="bg-red-700 text-white px-4 py-1 rounded w-32"
+        >
+          TIDAK
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const tombolTidak = document.getElementById("tombolTidak");
+      const tombolYa = document.getElementById("tombolYa");
+      const kalimat = document.getElementById("kalimat");
+      const gambar = document.getElementById("gambar");
+
+      const listKalimat = [
+        "Coba Lagi 😜",
+        "Udah jangan dipencet terus",
+        "pencet iya aja",
+        "Mending nyerah",
+        "KLIK YA!!!",
+        "masih nyoba",
+        "gak akan bisa broo",
+        "udah pencet iya aja"
+      ];
+
+      function yaDitekan() {
+        kalimat.innerHTML = "Makasih pujiannya bro 😎";
+        gambar.src =
+          "https://i.pinimg.com/originals/64/45/ee/6445ee2274a782a7c528303e9bd823d7.gif";
+
+        tombolYa.style.visibility = "hidden";
+        tombolTidak.style.visibility = "hidden";
+      }
+
+      function tidakDitekan() {
+        const randomIndex = Math.floor(Math.random() * listKalimat.length);
+        kalimat.innerHTML = listKalimat[randomIndex];
+
+        tombolTidak.style.position = "absolute";
+
+        const x = Math.random() * (window.innerWidth - tombolTidak.offsetWidth);
+        const y = Math.random() * (window.innerHeight - tombolTidak.offsetHeight);
+
+        tombolTidak.style.left = x + "px";
+        tombolTidak.style.top = y + "px";
+      }
+    </script>
+  </body>
+</html>

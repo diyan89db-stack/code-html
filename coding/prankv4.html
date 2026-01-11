@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hacker Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 28px;
+      animation: fade 1s forwards;
+      pointer-events: none;
+    }
+    @keyframes fade {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-30px); }
+    }
+  </style>
+</head>
+
+<body class="flex justify-center items-center h-screen overflow-hidden text-green-400">
+
+<canvas id="matrix"></canvas>
+
+<div class="bg-black bg-opacity-70 p-5 rounded-md border border-green-500 text-center">
+  
+  <!-- GAMBAR DI ATAS -->
+  <img 
+    id="gambarUtama"
+    src="https://media.tenor.com/GfSX-u7VGM4AAAAM/coding.gif" 
+    width="200"
+    class="mx-auto mb-3 rounded"
+  />
+
+  <h1 id="kalimat" class="text-xl font-bold mb-4">
+    Bagas jago ngoding gak?
+  </h1>
+
+  <div class="flex gap-4 justify-center">
+    <button
+      id="tombolYa"
+      onclick="yaDitekan()"
+      class="bg-green-600 text-black px-4 py-1 rounded w-32"
+    >
+      YA
+    </button>
+
+    <button
+      id="tombolTidak"
+      class="bg-red-700 text-white px-4 py-1 rounded w-32"
+    >
+      TIDAK
+    </button>
+  </div>
+</div>
+
+<script>
+/* ===== MATRIX EFFECT ===== */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "010101HACKERBAGAS";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+
+function drawMatrix() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#00ff00";
+  ctx.font = fontSize + "px monospace";
+
+  drops.forEach((y, i) => {
+    const text = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillText(text, i * fontSize, y * fontSize);
+
+    if (y * fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  });
+}
+setInterval(drawMatrix, 33);
+
+/* ===== TOMBOL TIDAK LICIN ===== */
+const tombolTidak = document.getElementById("tombolTidak");
+const emojis = ["😜", "😂", "😝", "🤡", "🙃"];
+
+function kabur(e) {
+  tombolTidak.style.position = "absolute";
+  tombolTidak.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  tombolTidak.style.top = Math.random() * (window.innerHeight - 60) + "px";
+
+  const emoji = document.createElement("div");
+  emoji.className = "emoji";
+  emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+  emoji.style.left = e.clientX + "px";
+  emoji.style.top = e.clientY + "px";
+  document.body.appendChild(emoji);
+
+  setTimeout(() => emoji.remove(), 1000);
+}
+
+tombolTidak.addEventListener("mouseenter", kabur);
+tombolTidak.addEventListener("touchstart", kabur);
+
+/* ===== TOMBOL YA ===== */
+function yaDitekan() {
+  document.getElementById("kalimat").innerHTML =
+    "✔ ACCESS GRANTED<br>🔥 BAGAS = REAL CODER 🔥";
+  tombolTidak.style.display = "none";
+  document.getElementById("tombolYa").style.display = "none";
+
+  // Ganti gambar jadi celebration
+  document.getElementById("gambarUtama").src = "https://media.tenor.com/2roX3uxz_68AAAAC/coding.gif";
+}
+</script>
+
+</body>
+</html>
